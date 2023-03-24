@@ -1,0 +1,22 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t irshad/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true irshad/docker-react npm run test
+
+deploy:
+  provider: s3
+  access_key_id: $access_key_id
+  secret_access_key: $secret_access_key
+  bucket: "demobucketchatty"
+  skip_cleanup: true
+  region: "us-east-1"
+  on:
+    branch: master
+  local_dir: build
